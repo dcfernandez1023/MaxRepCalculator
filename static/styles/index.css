@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+}
+
+input, label {
+    display: block;
+}
+
+.container {
+    width: 100%;
+    margin-left: 15px;
+}
+
+.navbar {
+    top: 0px;
+    width: 100%;
+    padding: 5px 5px;
+    text-align: left;
+    background-color: #212F3D;
+}
+
+.navbar-header {
+    margin-left: 10px;
+    color: #FBFCFC
+}
+
+.input-container {
+    float: left;
+}
+
+.calculator-inputs {
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.calculate-button {
+    padding: 5px;
+}
