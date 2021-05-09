@@ -5,6 +5,7 @@ on:
       - dev
 
 name: One Rep Max Calculator Deployment
+
   jobs:
     deploy:
       name: Deploy
