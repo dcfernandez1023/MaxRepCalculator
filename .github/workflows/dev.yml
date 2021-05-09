@@ -37,6 +37,12 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Run Automated Tests
+        run: |
+          cd tests
+          pytest
+
       - name: Update Task Definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
