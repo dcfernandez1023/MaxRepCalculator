@@ -5,9 +5,8 @@ function calculateOneRepMax() {
         alert("Please enter a value in both input fields.");
         return;
     }
-    var hostnameAndPort = window.location.hostname + ":" + window.location.port.toString();
-    console.log(hostnameAndPort);
-    var endpoint = "http://" + hostnameAndPort + "/api/calculateOneRepMax/" + weightLifted + "/" + numReps;
+    var full = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+    var endpoint = full + "/api/calculateOneRepMax/" + weightLifted + "/" + numReps;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200) {

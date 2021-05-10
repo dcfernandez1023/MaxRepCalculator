@@ -9,7 +9,7 @@ name: Deploy One Rep Max Calculator
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy to Dev Environment
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +27,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Docker Build and Push
+      - name: Run Unit Tests + Docker Build and Push to ECR
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
