@@ -16,12 +16,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Run Automated Tests
-        run: |
-          cd tests
-          pytest
-          cd ..
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
