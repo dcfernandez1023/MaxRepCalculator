@@ -5,7 +5,8 @@ function calculateOneRepMax() {
         alert("Please enter a value in both input fields.");
         return;
     }
-    var endpoint = "http://localhost:5000/api/calculateOneRepMax/" + weightLifted + "/" + numReps;
+    var full = location.protocol+'//'+location.hostname+(location.port.toString().trim().length !== 0 ? ':'+location.port: '');
+    var endpoint = full + "/api/calculateOneRepMax/" + weightLifted + "/" + numReps;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200) {
@@ -16,7 +17,7 @@ function calculateOneRepMax() {
         else if(this.readyState == 4 && this.status == 400) {
             alert("Bad request. The data you entered is likely invalid. Please enter numbers only.");
         }
-        else if(this.readState == 4) {
+        else if(this.readyState == 4) {
             alert("An unexpected error occurred. Your request could not be processed.")
         }
     };

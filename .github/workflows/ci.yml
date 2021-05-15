@@ -1,0 +1,81 @@
+
+on:
+  push:
+    branches:
+      - master
+
+name: Deploy One Rep Max Calculator
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Run Dev Environment Unit Tests + Docker Build and Push to ECR
+        id: build-dev-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: dev-dcfernandez
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Update Dev Task Definition
+        id: task-def-dev
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition-dev.json
+          container-name: dev-dcfernandez
+          image: ${{ steps.build-dev-image.outputs.image }}
+
+      - name: Deploy Amazon ECS Dev Task Definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def-dev.outputs.task-definition }}
+          service: dev-dcfernandez
+          cluster: dev-dcfernandez
+          wait-for-service-stability: true
+
+      - name: Run Prod Environment Unit Tests + Docker Build and Push to ECR
+        id: build-prod-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: prod-dcfernandez
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Update Prod Task Definition
+        id: task-def-prod
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition-prod.json
+          container-name: prod-dcfernandez
+          image: ${{ steps.build-prod-image.outputs.image }}
+
+      - name: Deploy Amazon ECS Prod Task Definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def-prod.outputs.task-definition }}
+          service: prod-dcfernandez
+          cluster: prod-dcfernandez
+          wait-for-service-stability: true
