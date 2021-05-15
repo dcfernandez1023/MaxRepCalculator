@@ -13,6 +13,9 @@ exercise based on the Brzycki formula (https://en.wikipedia.org/wiki/One-repetit
 Though the application itself is simple, the main purpose of this project is to implement 
 a Continuous Deployment Pipeline with test automation, `Docker`, and `Github Actions`.
 
+Dev: http://dev-dcfernandez-1693893477.us-west-2.elb.amazonaws.com/
+Prod: http://prod-dcfernandez-2002147699.us-west-2.elb.amazonaws.com/
+
 
 ## Usage 
 ### Installation
