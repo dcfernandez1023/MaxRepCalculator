@@ -17,7 +17,7 @@ function calculateOneRepMax() {
         else if(this.readyState == 4 && this.status == 400) {
             alert("Bad request. The data you entered is likely invalid. Please enter numbers only.");
         }
-        else if(this.readState == 4) {
+        else if(this.readyState == 4) {
             alert("An unexpected error occurred. Your request could not be processed.")
         }
     };
